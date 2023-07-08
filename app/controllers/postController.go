@@ -7,6 +7,8 @@ import (
 
 	DB "app/database"
 	Models "app/models"
+
+	"github.com/gorilla/mux"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -42,4 +44,51 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(jsonData)
+}
+
+func Show(w http.ResponseWriter, r *http.Request) {
+	db := DB.SqlConnect()
+	defer db.Close()
+
+	params := mux.Vars(r)
+	id := params["id"]
+	if id == "" {
+		panic("Error!")
+	}
+
+	row, err := db.Query("SELECT * FROM posts WHERE id=?", id)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer row.Close()
+
+	post := Models.Post{}
+	for row.Next() {
+		err = row.Scan(&post.ID, &post.Sentence, &post.CreatedAt, &post.UpdatedAt, &post.DeletedAt)
+		if err != nil {
+			panic(err.Error())
+		}
+	}
+
+	jsonData, err := json.Marshal(post)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// レスポンスを設定
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonData)
+}
+
+func Create(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func Update(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func Delete(w http.ResponseWriter, r *http.Request) {
+
 }
