@@ -82,13 +82,58 @@ func Show(w http.ResponseWriter, r *http.Request) {
 }
 
 func Create(w http.ResponseWriter, r *http.Request) {
+	db := DB.SqlConnect()
+	defer db.Close()
 
+	err := r.ParseForm()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	sentence := r.FormValue("sentence")
+
+	insert, err := db.Prepare("UPDATE posts SET sentence=?")
+	if err != nil {
+		panic(err.Error())
+	}
+	insert.Exec(sentence)
+	w.WriteHeader(http.StatusOK)
 }
 
 func Update(w http.ResponseWriter, r *http.Request) {
+	db := DB.SqlConnect()
+	defer db.Close()
+
+	params := mux.Vars(r)
+	id := params["id"]
+
+	err := r.ParseForm()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	sentence := r.FormValue("sentence")
+
+	update, err := db.Prepare("UPDATE posts SET sentence=? WHERE id = ?")
+	if err != nil {
+		panic(err.Error())
+	}
+	update.Exec(sentence, id)
+	w.WriteHeader(http.StatusOK)
 
 }
 
 func Delete(w http.ResponseWriter, r *http.Request) {
+	db := DB.SqlConnect()
+	defer db.Close()
 
+	params := mux.Vars(r)
+	id := params["id"]
+
+	delete, err := db.Prepare("DELETE from posts WHERE id = ?")
+	if err != nil {
+		panic(err.Error())
+	}
+	delete.Exec(id)
+	w.WriteHeader(http.StatusOK)
 }
