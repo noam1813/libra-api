@@ -2,3 +2,6 @@
 FROM golang:1.20.5-alpine
 # アップデートとgitのインストール！！
 RUN apk update && apk add git
+WORKDIR /usr/src/app
+COPY go.mod go.sum ./
+RUN go mod download

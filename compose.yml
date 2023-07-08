@@ -7,21 +7,23 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./app:/usr/src/app
+      - type: bind
+        source: ./app
+        target: /usr/src/app
     depends_on:
       - db
+    env_file: ./app/.env
+    networks:
+      - app-net
   db:
     container_name: db
     build: ./db
-    volumes: 
-      - ./db/data:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: database
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: password
+    env_file: ./db/.env
     ports:
       - "3306:3306"
-
-
+    networks:
+      - app-net
+networks:
+  app-net:
+    driver: bridge
 

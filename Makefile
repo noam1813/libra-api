@@ -15,7 +15,7 @@ start:
 	$(da) go run /usr/src/app/main.go
 
 stop:
-	docker compose down
+	docker stop libra-api
 
 restart:
 	make stop

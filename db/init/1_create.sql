@@ -1,13 +1,14 @@
 -- golang_dbをアクティブ
 DROP TABLE IF EXISTS users;
 -- usersテーブルを作成。名前とパスワード
-CREATE TABLE users (
-    id INT(11) AUTO_INCREMENT NOT NULL,
-    name VARCHAR(64) NOT NULL,
-    password CHAR(30) NOT NULL,
+CREATE TABLE posts (
+    id int AUTO_INCREMENT,
+    sentence text,
+    created_at timestamp default current_timestamp,
+    updated_at timestamp default current_timestamp,
+    deleted_at timestamp,
     PRIMARY KEY (id)
 );
 -- usersテーブルに２つレコードを追加
-INSERT INTO users (name, password) VALUES ("gophar", "5555");
-INSERT INTO users (name, password) VALUES ("octcat", "0000");
-
+INSERT INTO posts (sentence)
+VALUES ("gophar"),("hello"),("good bye");
