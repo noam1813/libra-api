@@ -2,6 +2,7 @@ package PostController
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -56,7 +57,7 @@ func Show(w http.ResponseWriter, r *http.Request) {
 		panic("Error!")
 	}
 
-	row, err := db.Query("SELECT * FROM posts WHERE id=?", id)
+	row, err := db.Query("SELECT * FROM posts WHERE id=? ORDER BY updated_at DESC", id)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -92,7 +93,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 	sentence := r.FormValue("sentence")
 
-	insert, err := db.Prepare("UPDATE posts SET sentence=?")
+	insert, err := db.Prepare(fmt.Sprintf("INSERT INTO posts(sentence) VALUES (?)"))
 	if err != nil {
 		panic(err.Error())
 	}

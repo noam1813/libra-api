@@ -11,6 +11,7 @@ init-dev:
 	make build
 
 build:
+	make network/create
 	docker-compose up -d --build
 	docker ps -a
 
@@ -20,6 +21,7 @@ start:
 stop:
 	docker stop app db
 	docker rm app db
+	make network/delete
 
 restart:
 	make stop
@@ -30,3 +32,10 @@ restart-dev:
 	make stop
 	make build
 
+network/create:
+	docker network create app-net
+	docker network ls
+
+network/delete:
+	docker network rm app-net
+	docker network ls
